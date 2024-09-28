@@ -1,0 +1,113 @@
+AIM:
+To simulate and compare the performance of Distance Vector Routing and Link State Routing algorithms in a network 
+using NS-2.
+ALGORITHM: Distance vector routing protocol
+Step 1:Create a network simulator object ns to invoke simulation
+Step 2:Using an object open a file in write mode
+Step 3:Using the a foresaid object write all the trace output into the file
+Step 4:Using an object create a file to write all nam window output into it
+Step 5:Create 4 Nodes so that they are placed in a rectangular position
+Step 6:Create Duplex Links for each node of 10 mbps bandwidth and delay of 10 ms
+Step 7:Set one node as Source and attach TCP agent and FTP traffic generator
+Step 8:Set one node as Destination and attach TCP sink 
+Step 9:Set routing protocol as Distance Vector
+Step 10:Make any two links down and up at different timings and see how the routing is happening in NAM 
+window
+Step 11:Run the Simulation
+Program:
+set ns [new Simulator]
+set nf [open out.nam w]
+$ns namtrace-all $nf
+set tr [open out.tr w]
+$ns trace-all $tr
+proc finish {} {
+global nf ns tr
+$ns flush-trace
+close $tr
+exec nam out.nam &
+exit 0
+}
+set n0 [$ns node]
+set n1 [$ns node]
+set n2 [$ns node]
+set n3 [$ns node]
+$ns duplex-link $n0 $n1 10Mb 10ms DropTail
+$ns duplex-link $n1 $n2 10Mb 10ms DropTail
+$ns duplex-link $n0 $n3 10Mb 10ms DropTail
+$ns duplex-link $n3 $n2 10Mb 10ms DropTail
+$ns duplex-link-op $n0 $n1 orient right
+$ns duplex-link-op $n1 $n2 orient down
+$ns duplex-link-op $n3 $n2 orient right
+$ns duplex-link-op $n0 $n3 orient down
+set tcp [new Agent/TCP]
+$ns attach-agent $n0 $tcp
+set ftp [new Application/FTP]
+$ftp attach-agent $tcp
+set sink [new Agent/TCPSink]
+$ns attach-agent $n2 $sink
+$ns connect $tcp $sink
+$tcp set fid_ 1
+$ns rtmodel-at 5.0 down $n1 $n2
+$ns rtmodel-at 10.0 up $n1 $n2
+$ns rtmodel-at 12.0 down $n0 $n3
+$ns rtproto DV
+$ns at 1.0 "$ftp start"
+$ns at 15.0 "finish"
+$ns run
+OUTPUT:
+Algorithm: Link State Routing
+Step 1:Create a network simulator object ns to invoke simulation
+Step 2:Using an object open a file in write mode
+Step 3:Using the a foresaid object write all the trace output into the file
+Step 4:Using an object create a file to write all nam window output into it
+Step 5:Create 4 Nodes so that they are placed in a rectangular position
+Step 6:Create Duplex Links for each node of 10 mbps bandwidth and delay of 10 ms
+Step 7:Set one node as Source and attach TCP agent and FTP traffic generator
+Step 8:Set one node as Destination and attach TCP sink 
+Step 9:Set routing protocol as Link State
+Step 10:Make any two links down and up at different timings and see how the routing is happening in NAM window
+Step 11:Run the Simulation
+Program:
+set ns [new Simulator]
+set nf [open out.nam w]
+$ns namtrace-all $nf
+set tr [open out.tr w]
+$ns trace-all $tr
+proc finish {} {
+global nf ns tr
+$ns flush-trace
+close $tr
+exec nam out.nam &
+exit 0
+}
+set n0 [$ns node]
+set n1 [$ns node]
+set n2 [$ns node]
+set n3 [$ns node]
+$ns duplex-link $n0 $n1 10Mb 10ms DropTail
+$ns duplex-link $n1 $n2 10Mb 10ms DropTail
+$ns duplex-link $n0 $n3 10Mb 10ms DropTail
+$ns duplex-link $n3 $n2 10Mb 10ms DropTail
+$ns duplex-link-op $n0 $n1 orient right
+$ns duplex-link-op $n1 $n2 orient down
+$ns duplex-link-op $n3 $n2 orient right
+$ns duplex-link-op $n0 $n3 orient down
+set tcp [new Agent/TCP]
+$ns attach-agent $n0 $tcp
+set ftp [new Application/FTP]
+$ftp attach-agent $tcp
+set sink [new Agent/TCPSink]
+$ns attach-agent $n2 $sink
+$ns connect $tcp $sink
+$tcp set fid_ 1
+$ns rtmodel-at 5.0 down $n1 $n2
+$ns rtmodel-at 10.0 up $n1 $n2
+$ns rtmodel-at 12.0 down $n0 $n3
+$ns rtproto LS
+$ns at 1.0 "$ftp start"
+$ns at 15.0 "finish"
+$ns run
+OUTPUT:
+RESULT:
+Thus the simulation of Distance Vector Routing and Link State Routing algorithms and their performance 
+comparison in a network using NS-2 has been executed successfully.
